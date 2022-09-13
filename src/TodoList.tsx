@@ -7,13 +7,15 @@ export type TaskType = {
     isDone: boolean
 }
 type TodoListPropsType = {
+    todolistId: string
     title: string
     tasks: Array<TaskType>
     filter: FilterValuesType
-    removeTas: (taskID: string) => void
-    changeFilter: (filter: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeStatus: (taskID: string, isDone: boolean) => void
+    removeTask: (taskID: string, todolistId: string) => void
+    changeFilter: (filter: FilterValuesType, todolistId: string) => void
+    addTask: (title: string, todolistId: string) => void
+    changeStatus: (taskID: string, isDone: boolean, todolistId: string) => void
+    removeTodolist: (todolistId: string) => void
 }
 const TodoList = (props: TodoListPropsType) => {
     const [title, setTitle] = useState<string>('')
@@ -25,9 +27,9 @@ const TodoList = (props: TodoListPropsType) => {
                     <input
                         type="checkbox"
                         checked={task.isDone}
-                        onChange={(e) => props.changeStatus(task.id, e.currentTarget.checked)}/>
+                        onChange={(e) => props.changeStatus(task.id, e.currentTarget.checked, props.todolistId)}/>
                     <span>{task.title}</span>
-                    <button onClick={() => props.removeTas(task.id)}>delete</button>
+                    <button onClick={() => props.removeTask(task.id, props.todolistId)}>delete</button>
                 </li>
             )
         })
@@ -35,14 +37,14 @@ const TodoList = (props: TodoListPropsType) => {
     const addTask = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.addTask(trimmedTitle)
+            props.addTask(trimmedTitle, props.todolistId)
         } else {
             setError(true)
         }
         setTitle('')
     }
     const handlerCreator = (filter: FilterValuesType) => {
-        return () => props.changeFilter(filter)
+        return () => props.changeFilter(filter, props.todolistId)
     }
     const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         if (error) setError(false)
@@ -54,12 +56,15 @@ const TodoList = (props: TodoListPropsType) => {
         }
     }//обработка событий
     const UserMessage =
-        error?
-            <div style={{color:'hotpink'}}> title is required!</div>
+        error ?
+            <div style={{color: 'hotpink'}}> title is required!</div>
             : <div>please, create list item</div>
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>
+                {props.title}
+            <button onClick={()=>props.removeTodolist(props.todolistId)}>delete Todolist</button>
+            </h3>
             <div>
                 <input
                     className={error ? 'error' : ''}
