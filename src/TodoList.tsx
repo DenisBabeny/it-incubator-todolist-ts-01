@@ -2,6 +2,8 @@ import React from 'react';
 import {FilterValuesType} from "./App";
 import AddItemForm from "./AddItemForm";
 import EditTableSpan from "./EditTableSpan";
+import {Button, IconButton} from "@material-ui/core";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export type TaskType = {
     id: string
@@ -35,7 +37,12 @@ const TodoList = (props: TodoListPropsType) => {
                         checked={task.isDone}
                         onChange={(e) => props.changeStatus(task.id, e.currentTarget.checked, props.todolistId)}/>
                     <EditTableSpan title={task.title} changeTitle={changeTaskTitle}/>
-                    <button onClick={() => props.removeTask(task.id, props.todolistId)}>delete</button>
+                    <IconButton
+                        size={'small'}
+                        onClick={() => props.removeTask(task.id, props.todolistId)}
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
                 </li>
             )
         })
@@ -63,15 +70,30 @@ props.addTask(props.title, props.todolistId)
                 {tasksItems}
             </ul>
             <div>
-                <button className={props.filter === 'all' ? "btn-active btn" : 'btn'}
+                <Button
+                    size={'small'}
+                    variant={'contained'}
+                    disableElevation
+                    color={props.filter=== 'all' ? "secondary" : "primary"}
+                    style={{marginRight: '5px'}}
                         onClick={handlerCreator('all')}>All
-                </button>
-                <button className={props.filter === 'active' ? "btn-active btn" : 'btn'}
+                </Button>
+                <Button
+                    size={'small'}
+                    variant={'contained'}
+                    disableElevation
+                    style={{marginRight: '5px'}}
+                    color={props.filter=== 'active' ? "secondary" : "primary"}
                         onClick={handlerCreator('active')}>Active
-                </button>
-                <button className={props.filter === 'completed' ? "btn-active btn" : 'btn'}
+                </Button>
+                <Button
+                    size={'small'}
+                    variant={'contained'}
+                    disableElevation
+                    style={{marginRight: '5px'}}
+                    color={props.filter=== 'completed' ? "secondary" : "primary"}
                         onClick={handlerCreator('completed')}>Completed
-                </button>
+                </Button>
             </div>
         </div>
     );
