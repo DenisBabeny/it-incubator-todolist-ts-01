@@ -1,7 +1,9 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {IconButton, TextField} from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
 
-type AddItemFormPropsType ={
-    addItem:(title:string)=>void
+type AddItemFormPropsType = {
+    addItem: (title: string) => void
 }
 
 const AddItemForm = (props: AddItemFormPropsType) => {
@@ -18,26 +20,34 @@ const AddItemForm = (props: AddItemFormPropsType) => {
     const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') addItem()
     }
-        const addItem = () => {
-            const trimmedTitle = title.trim()
-            if (trimmedTitle) {
-                props.addItem(trimmedTitle)
-            } else {
-                setError(true)
-            }
-            setTitle('')
+    const addItem = () => {
+        const trimmedTitle = title.trim()
+        if (trimmedTitle) {
+            props.addItem(trimmedTitle)
+        } else {
+            setError(true)
         }
+        setTitle('')
+    }
     return (
         <div>
-            <input
-                className={error ? 'error' : ''}
+            <TextField
+                size={'small'}
+                variant={'outlined'}
                 value={title}
                 onChange={changeTitle}
                 onKeyDown={onKeyDownAddTask}
-
+                error={error}
+                label={'Title'}
+                helperText={error && "Title is required!"}
             />
-            <button onClick={addItem}>+</button>
-            {UserMessage}
+            <IconButton
+                onClick={addItem}
+                color={'primary'}
+            >
+                <AddIcon/>
+            </IconButton>
+            {/*{UserMessage}*/}
         </div>
     );
 };

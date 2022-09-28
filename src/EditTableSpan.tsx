@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
+import {TextField} from "@material-ui/core";
 
 type EditeTableSpanPropsType = {
     title: string
@@ -17,18 +18,20 @@ const EditTableSpan = (props: EditeTableSpanPropsType) => {
     const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
     }
-    const enterChangeTitle =(e:KeyboardEvent<HTMLInputElement>)=>{
-if(e.key === "Enter"){
-    ofEditeMode()
-}
+    const enterChangeTitle = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            ofEditeMode()
+        }
     }
     return (
-        editeMod ? <input
+        editeMod ?
+            <TextField
                 value={title}
                 autoFocus
                 onBlur={ofEditeMode}
                 onChange={changeTitle}
                 onKeyDown={enterChangeTitle}
+
             />
             : <span onDoubleClick={onEditeMode}>{props.title}</span>
     );

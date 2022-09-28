@@ -2,8 +2,9 @@ import React from 'react';
 import {FilterValuesType} from "./App";
 import AddItemForm from "./AddItemForm";
 import EditTableSpan from "./EditTableSpan";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, Checkbox, IconButton, List, ListItem} from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 
 export type TaskType = {
     id: string
@@ -20,39 +21,45 @@ type TodoListPropsType = {
     addTask: (title: string, todolistId: string) => void
     changeStatus: (taskID: string, isDone: boolean, todolistId: string) => void
     removeTodolist: (todolistId: string) => void
-    changeTaskTitle : (taskID: string, title:string, todolistId: string) => void
-    changeTodolistTitle : (title:string, todolistId: string)=>void
+    changeTaskTitle: (taskID: string, title: string, todolistId: string) => void
+    changeTodolistTitle: (title: string, todolistId: string) => void
 }
 const TodoList = (props: TodoListPropsType) => {
     let tasksItems: any = <span>Task list is empty</span>
-    if(props.tasks.length){
-       tasksItems = props.tasks.map(task => {
-            const changeTaskTitle = (title:string) => {
+    if (props.tasks.length) {
+        tasksItems = props.tasks.map(task => {
+            const changeTaskTitle = (title: string) => {
                 props.changeTaskTitle(task.id, title, props.todolistId)
             }
             return (
-                <li key={task.id} className={task.isDone ? "isDone" : ""}>
-                    <input
-                        type="checkbox"
+                <ListItem
+                    key={task.id}
+                    className={task.isDone ? "isDone" : ""}
+                >
+                    <Checkbox
+                        style={{color: 'hotpink'}}
                         checked={task.isDone}
-                        onChange={(e) => props.changeStatus(task.id, e.currentTarget.checked, props.todolistId)}/>
+                        onChange={(e) => props.changeStatus(task.id, e.currentTarget.checked, props.todolistId)}
+
+                    />
                     <EditTableSpan title={task.title} changeTitle={changeTaskTitle}/>
                     <IconButton
+                        color={'primary'}
                         size={'small'}
                         onClick={() => props.removeTask(task.id, props.todolistId)}
                     >
                         <DeleteIcon/>
                     </IconButton>
-                </li>
+                </ListItem>
             )
         })
     }
 
-    const addTask = (title:string) => {
-props.addTask(props.title, props.todolistId)
+    const addTask = (title: string) => {
+        props.addTask(title, props.todolistId)
     }
-    const changeTodolistTitle = (title:string) => {
-      props.changeTodolistTitle(title, props.todolistId)
+    const changeTodolistTitle = (title: string) => {
+        props.changeTodolistTitle(title, props.todolistId)
     }
     const handlerCreator = (filter: FilterValuesType) => {
         return () => props.changeFilter(filter, props.todolistId)
@@ -61,38 +68,44 @@ props.addTask(props.title, props.todolistId)
         <div>
             <h3>
                 <EditTableSpan title={props.title} changeTitle={changeTodolistTitle}/>
-            <button onClick={()=>props.removeTodolist(props.todolistId)}>delete Todolist</button>
+                <IconButton
+                    color={'primary'}
+                    size={'small'}
+                    onClick={() => props.removeTodolist(props.todolistId)}
+                >
+                    <ClearAllIcon/>
+                </IconButton>
             </h3>
             <div>
                 <AddItemForm addItem={addTask}/>
             </div>
-            <ul>
+            <List>
                 {tasksItems}
-            </ul>
+            </List>
             <div>
                 <Button
                     size={'small'}
                     variant={'contained'}
                     disableElevation
-                    color={props.filter=== 'all' ? "secondary" : "primary"}
+                    color={props.filter === 'all' ? "secondary" : "primary"}
                     style={{marginRight: '5px'}}
-                        onClick={handlerCreator('all')}>All
+                    onClick={handlerCreator('all')}>All
                 </Button>
                 <Button
                     size={'small'}
                     variant={'contained'}
                     disableElevation
                     style={{marginRight: '5px'}}
-                    color={props.filter=== 'active' ? "secondary" : "primary"}
-                        onClick={handlerCreator('active')}>Active
+                    color={props.filter === 'active' ? "secondary" : "primary"}
+                    onClick={handlerCreator('active')}>Active
                 </Button>
                 <Button
                     size={'small'}
                     variant={'contained'}
                     disableElevation
                     style={{marginRight: '5px'}}
-                    color={props.filter=== 'completed' ? "secondary" : "primary"}
-                        onClick={handlerCreator('completed')}>Completed
+                    color={props.filter === 'completed' ? "secondary" : "primary"}
+                    onClick={handlerCreator('completed')}>Completed
                 </Button>
             </div>
         </div>
